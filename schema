@@ -1,0 +1,60 @@
+-- ОПИСАНИЕ:
+-- Сервис рейтинга пройденных игр PS5.
+-- Люди, прохождения, могут добавлять игры в список, рекомендовать их оценивая их по 10-ти бальной шкале. 
+-- Таким образом будет создаваться рейтинг 
+
+
+create table users (
+	id bigint generated always as identity,
+	name varchar(200) not null,
+	surname varchar(200) not null,
+	active boolean default true,
+	primary key (id)
+);
+
+create table gamers (
+	id bigint generated always as identity,
+	name varchar(200) not null,
+	surname varchar(200) not null,
+	primary key (id)
+);
+
+create table games (
+	id bigint generated always as identity,
+	title varchar(999) not null,
+	studio_id integer,
+	constraint fk_studio_id foreign key (studio_id) references studios (id),
+	primary key (id)
+);
+
+create table gamers_rates (
+    date timestamp with time zone default current_timestamp,
+    gamer_id integer not null,
+    game_id integer not null,
+    rate integer not null,
+    check (rate > 0 and rate <= 10),
+    constraint fk_gamer_id foreign key (gamer_id) references gamers (id),
+    constraint fk_game_id foreign key (game_id) references games (id),
+    constraint pk_gamer_game primary key(gamer_id, game_id)
+);
+
+insert into gamers (name, surname) values 
+('Sergey','Anikin'), 
+('Fox','Mulder'), 
+('Dana','Scully');
+
+insert into studios (name) values 
+('BlueTwelve'),('Activision'),
+('Ubisoft'),
+('Sony');
+
+insert into games (title, sudio_id) values 
+('Stray', 1),
+('CODMW19', 2),
+('RainbowSix', 3),
+('GhostofTsushima',4);
+
+insert into gamers_rates (gamer_id, game_id, rate) values 
+(1,1,10), (1,2,10), (1,3,9), (1,4,10), (1,5,8), (1,6,9), (1,7,7),
+(2,1,10), (2,2,9), (2,3,10), (2,4,8), (2,5,8), (2,6,9), (2,7,8), 
+(3,1,9), (3,2,10), (3,3,9), (3,4,9), (3,5,9), (3,6,9), (3,7,7);
