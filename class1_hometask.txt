@@ -1,0 +1,84 @@
+1. Развернуть сервер PostgreSQL в Docker.
+
+mkdir -p $(pwd)/db/data
+
+docker run \
+-d \
+-p 5432:5432 \
+--name postgres \
+-e POSTGRES_PASSWORD=password \
+-e PGDATA=/var/lib/postgresql/data \
+-v $(pwd)/mntdata:/var/lib/postgresql/data \
+postgres:14.4
+
+
+root@DESKTOP-9OU2IE3:~# docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS         PORTS                    NAMES
+7c47f6b73171   postgres:14.4   "docker-entrypoint.s…"   14 seconds ago   Up 6 seconds   0.0.0.0:5432->5432/tcp   postgres
+
+2. Создать пользователя и базу данных.
+
+create database gb_postgres_golang;
+create user gopher PASSWORD '1234';
+grant all privileges on database gb_postgres_golang to gopher;
+
+3. В базе из пункта 2 создать таблицу: не менее трёх столбцов различных типов. SQL-запрос на создание таблицы добавить в текстовый файл class1_hometask.txt.
+
+create table users (
+	id bigint generated always as identity,
+	name varchar(200) not null,
+	surname varchar(200) not null,
+	active boolean default true,
+	primary key (id)
+);
+
+4. В таблицу из пункта 3 вставить не менее трёх строк. SQL-запрос на вставку добавить в текстовый файл class1_hometask.txt.
+
+insert into users (name, surname) values ('Sergey','Anikin'),('Fox','Mulder'),('Dana','Scully');
+
+gb_postgres_golang=> select * from users;
+ id |  name  | surname | active
+----+--------+---------+--------
+  1 | Sergey | Anikin  | t
+  2 | Fox    | Mulder  | t
+  3 | Dana   | Scully  | t
+(3 rows)
+
+
+5. Используя мета-команды psql, вывести список всех сущностей в базе данных из пункта 2. Полученный список сущностей добавить в текстовый файл class1_hometask.txt.
+
+gb_postgres_golang=> \l
+
+                                    List of databases
+        Name        |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+--------------------+----------+----------+------------+------------+-----------------------
+ gb_postgres_golang | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres           | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0          | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+                    |          |          |            |            | postgres=CTc/postgres
+ template1          | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+                    |          |          |            |            | postgres=CTc/postgres
+(4 rows)
+
+
+gb_postgres_golang=> \du
+
+                                   List of roles
+ Role name |                         Attributes                         | Member of
+-----------+------------------------------------------------------------+-----------
+ gopher    |                                                            | {}
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+
+gb_postgres_golang=> \d
+
+             List of relations
+ Schema |     Name     |   Type   | Owner
+--------+--------------+----------+--------
+ public | users        | table    | gopher
+ public | users_id_seq | sequence | gopher
+(2 rows)
+
+
+6-8 - в schema.sql
+еще не грузил в БД - возможно заметите косяки
