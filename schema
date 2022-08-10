@@ -12,6 +12,14 @@ create table users (
 	primary key (id)
 );
 
+
+create table studios (
+	id bigint generated always as identity,
+	name varchar(200) not null,
+    studio_id integer,
+	primary key (id)
+);
+
 create table gamers (
 	id bigint generated always as identity,
 	name varchar(200) not null,
@@ -43,12 +51,12 @@ insert into gamers (name, surname) values
 ('Fox','Mulder'), 
 ('Dana','Scully');
 
-insert into studios (name) values 
-('BlueTwelve'),('Activision'),
-('Ubisoft'),
-('Sony');
+insert into studios (name, studio_id) values 
+('BlueTwelve', 1),('Activision', 2),
+('Ubisoft', 3),
+('Sony', 4);
 
-insert into games (title, sudio_id) values 
+insert into games (title, studio_id) values 
 ('Stray', 1),
 ('CODMW19', 2),
 ('RainbowSix', 3),
