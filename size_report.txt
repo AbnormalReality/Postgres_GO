@@ -1,0 +1,77 @@
+Оценить объём занимаемого места. Представить в виде отчёта по каждой таблице в вашей базе в текстовом файле size_report.txt. В отчёте указать:
+
+1) список таблиц;
+
+gb_postgres_golang=> \dt
+           List of relations
+ Schema |     Name     | Type  | Owner
+--------+--------------+-------+--------
+ public | gamers       | table | gopher
+ public | gamers_rates | table | gopher
+ public | games        | table | gopher
+ public | studios      | table | gopher
+ public | users        | table | gopher
+(5 rows)
+
+
+2) количество строк в каждой таблице в соответствии со статистикой, которую собирает Postgres;
+
+gb_postgres_golang=> select count(*) from users;
+count
+-------
+     3
+(1 row)
+
+gb_postgres_golang=> select count(*) from studios;
+ count
+-------
+     4
+(1 row)
+
+gb_postgres_golang=> select count(*) from games;
+ count
+-------
+     4
+(1 row)
+
+
+gb_postgres_golang=>  select count(*) from gamers_rates;
+ count
+-------
+    21
+(1 row)
+
+
+3) объём диска, занимаемого каждой таблицей;
+
+gb_postgres_golang=> \d+
+                           List of relations
+ Schema |      Name      |   Type   | Owner  |    Size    | Description
+--------+----------------+----------+--------+------------+-------------
+ public | gamers         | table    | gopher | 8192 bytes |
+ public | gamers_id_seq  | sequence | gopher | 8192 bytes |
+ public | gamers_rates   | table    | gopher | 8192 bytes |
+ public | games          | table    | gopher | 16 kB      |
+ public | games_id_seq   | sequence | gopher | 8192 bytes |
+ public | studios        | table    | gopher | 8192 bytes |
+ public | studios_id_seq | sequence | gopher | 8192 bytes |
+ public | users          | table    | gopher | 8192 bytes |
+ public | users_id_seq   | sequence | gopher | 8192 bytes |
+(9 rows)
+
+
+4) общий объём диска, занимаемого экземпляром Postgres.
+
+root@DESKTOP-9OU2IE3:~# du -sh $PGDATA/*
+0       /bin
+4.0K    /boot
+0       /dev
+5.5M    /etc
+4.0K    /home
+620K    /init
+0       /lib
+0       /lib32
+0       /lib64
+0       /libx32
+16K     /lost+found
+4.0K    /media

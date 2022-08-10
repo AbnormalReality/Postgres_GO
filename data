@@ -1,0 +1,24 @@
+--Подготовить набор данных для вашей базы. 
+--Не обязательно много, главное покрыть возможные примеры использования вашей базы. 
+--Описать запросы на добавление данных в data.sql файле.
+
+insert into gamers (name, surname) values 
+('Sergey','Anikin'), 
+('Fox','Mulder'), 
+('Dana','Scully');
+
+insert into studios (name, studio_id) values 
+('BlueTwelve', 1),('Activision', 2),
+('Ubisoft', 3),
+('Sony', 4);
+
+insert into games (title, studio_id) values 
+('Stray', 1),
+('CODMW19', 2),
+('RainbowSix', 3),
+('GhostofTsushima',4);
+
+insert into gamers_rates (gamer_id, game_id, rate) values 
+(1,1,10), (1,2,10), (1,3,9), (1,4,10), (1,5,8), (1,6,9), (1,7,7),
+(2,1,10), (2,2,9), (2,3,10), (2,4,8), (2,5,8), (2,6,9), (2,7,8), 
+(3,1,9), (3,2,10), (3,3,9), (3,4,9), (3,5,9), (3,6,9), (3,7,7);
