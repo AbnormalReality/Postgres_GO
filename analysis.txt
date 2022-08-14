@@ -1,0 +1,91 @@
+Создал два индекса: 
+
+
+1) Для поиска игроков (gamers) по фамилии (полное соответствие):
+
+До создания индекса
+
+	gb_postgres_golang=> explain analyze select surname from users where surname = 'Anikin';
+	                                                                       QUERY PLAN
+--------------------------------------------------------------------------------------------------
+ Seq Scan on users  (cost=0.00..11.12 rows=1 width=418) (actual time=0.046..0.051 rows=1 loops=1)
+   Filter: ((surname)::text = 'Anikin'::text)
+   Rows Removed by Filter: 2
+ Planning Time: 0.838 ms
+ Execution Time: 0.392 ms
+(5 rows)
+
+
+ Теперь создаем индекс.
+
+	gb_postgres_golang=> create index concurrently gamers_surname_idx on gamers(surname);
+	CREATE INDEX
+
+Проверяем после создания индекса:
+
+	gb_postgres_golang=> explain analyze select surname from users where surname = 'Anikin';
+	                                          QUERY PLAN
+--------------------------------------------------------------------------------------------------
+ Seq Scan on users  (cost=0.00..11.12 rows=1 width=418) (actual time=0.049..0.054 rows=1 loops=1)
+   Filter: ((surname)::text = 'Anikin'::text)
+   Rows Removed by Filter: 2
+ Planning Time: 0.474 ms
+ Execution Time: 0.303 ms
+(5 rows)
+
+
+Индекс занимает всего 16 kB:
+
+	gb_postgres_golang=> \di+ gamers_surname_idx;
+
+	                              List of relations
+ Schema |        Name        | Type  | Owner  | Table  | Size  | Description
+--------+--------------------+-------+--------+--------+-------+-------------
+ public | gamers_surname_idx | index | gopher | gamers | 16 kB |
+(1 row)
+
+
+
+
+2) Индекс для поиска игр по названию (по вхождению)
+
+До создания индекса
+
+	gb_postgres_golang=> explain analyze select * from games where title like '%Ghos%';
+	                                             QUERY PLAN
+--------------------------------------------------------------------------------------------------
+ Seq Scan on games  (cost=0.00..11.75 rows=1 width=528) (actual time=0.056..0.060 rows=1 loops=1)
+   Filter: ((title)::text ~~ '%Ghos%'::text)
+   Rows Removed by Filter: 3
+ Planning Time: 0.241 ms
+ Execution Time: 0.236 ms
+(5 rows)
+
+
+
+Теперь создаем индекс для поиска по вхождению строки.
+
+	create index concurrently games_title_idx on games using btree (title text_pattern_ops);
+
+Проверяем после создания индекса:
+
+	gb_postgres_golang=> explain analyze select * from games where title like '%Ghos%';
+	                                           QUERY PLAN
+-------------------------------------------------------------------------------------------------
+ Seq Scan on games  (cost=0.00..1.05 rows=1 width=528) (actual time=0.049..0.051 rows=1 loops=1)
+   Filter: ((title)::text ~~ '%Ghos%'::text)
+   Rows Removed by Filter: 3
+ Planning Time: 1.373 ms
+ Execution Time: 0.131 ms
+(5 rows)
+
+
+Индекс занимает 16 kB
+
+	gb_postgres_golang=> \di+ games_title_idx;
+	
+                            List of relations
+ Schema |      Name       | Type  | Owner  | Table | Size  | Description
+--------+-----------------+-------+--------+-------+-------+-------------
+ public | games_title_idx | index | gopher | games | 16 kB |
+(1 row)

@@ -1,0 +1,65 @@
+-- поиск пользователя-геймера по фамилии (по вхождению)
+select surname, name from users where surname like 'Ani%';
+
+
+ surname |  name
+---------+--------
+ Anikin  | Sergey
+(1 row)
+
+
+-- поиск студии по названию (по вхождению)
+select name from studios where name like 'Blue%';
+
+
+    name
+------------
+ BlueTwelve
+(1 row)
+
+
+-- вывод списка игр созданных определнной студией
+select 
+	games.id, 
+	games.title 
+from games
+left join studios on games.studio_id = studios.id
+where studios.name like 'Acti%';
+
+ id |  title
+----+---------
+  2 | CODMW19
+(1 row)
+
+
+
+--вывод названий игр и студий их создавших
+select 
+	games.id, games.title,
+	concat(studios.name, ' ',studios.name) as studio 
+from games 
+left join studios on studios.id = games.studio_id;
+
+
+ id |      title      |        studio
+----+-----------------+-----------------------
+  1 | Stray           | BlueTwelve BlueTwelve
+  2 | CODMW19         | Activision Activision
+  3 | RainbowSix      | Ubisoft Ubisoft
+  4 | GhostofTsushima | Sony Sony
+(4 rows)
+
+
+-- вывод списка игроков и оценок, которые они поставили играм
+select 
+	concat(gamers.name, ' ',gamers.surname) as gamer,
+	concat(games.title, ' ',studios.name) as game,
+	rate
+from gamers_rates as rates
+left join gamers on gamers.id = rates.gamer_id
+left join games on games.id = rates.game_id
+left join studios on studios.id = games.studio_id;
+
+ gamer | game | rate
+-------+------+------
+(0 rows)

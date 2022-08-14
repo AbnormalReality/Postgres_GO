@@ -1,0 +1,21 @@
+
+
+insert into gamers (name, surname) values 
+('Sergey','Anikin'), 
+('Fox','Mulder'), 
+('Dana','Scully');
+
+insert into studios (name, studio_id) values 
+('BlueTwelve', 1),('Activision', 2),
+('Ubisoft', 3),
+('Sony', 4);
+
+insert into games (title, studio_id) values 
+('Stray', 1),
+('CODMW19', 2),
+('RainbowSix', 3),
+('GhostofTsushima',4);
+
+
+create index concurrently gamers_surname_idx on gamers(surname);
+create index concurrently games_title_idx on games using btree (title text_pattern_ops);
