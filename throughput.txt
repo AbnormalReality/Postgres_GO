@@ -1,0 +1,31 @@
+Имя устройства	DESKTOP-9OU2IE3
+Процессор	AMD A4-6210 APU with AMD Radeon R3 Graphics       1.80 GHz
+Оперативная память	4,00 ГБ (доступно: 3,46 ГБ)
+Код устройства	C79F3E90-978E-45FF-8155-FF2C138F6806
+Код продукта	00327-60000-00000-AA262
+Тип системы	64-разрядная операционная система, процессор x64
+
+
+
+root@DESKTOP-9OU2IE3:~# gb_postgres_golang % go run cmd/punisher/punisher.go --max-conns=1 --min-conns=1 --studio=Activision
+    start punish
+    duration: 12.475648628s
+    threads: 1000
+    queries: 5798
+    QPS: 548
+
+
+root@DESKTOP-9OU2IE3:~# gb_postgres_golang % go run cmd/punisher/punisher.go --max-conns=8 --min-conns=1 --studio=Activision
+    start punish
+    duration: 10.955488841s
+    threads: 1000
+    queries: 23476
+    QPS: 3348
+
+
+root@DESKTOP-9OU2IE3:~# gb_postgres_golang % go run cmd/punisher/punisher.go --max-conns=16 --min-conns=1 --studio=Activision
+    start punish
+    duration: 10.822398727s
+    threads: 1000
+    queries: 33611
+    QPS: 5724
