@@ -1,0 +1,36 @@
+Как запустить интеграционный тест
+go test -run TestMain ./pkg/storage/ -v -count 1
+
+Как запустить миграцию
+Запускаем контейнер с пустой БД
+
+docker run \
+-d \
+-p 5432:5432 \
+--name postgres \
+-e POSTGRES_PASSWORD=password \
+-e PGDATA=/var/lib/postgresql/data \
+-v $(pwd)/mntdata:/var/lib/postgresql/data \
+postgres:14.4
+
+
+
+Запускаем миграцию БД
+
+migrate -database "postgresql://postgres:password@localhost:5432/postgres?sslmode=disable" -path migrations up
+
+
+
+Проверяем работу приложения
+
+go run cmd/main.go --studio=Activision
+
+
+По запросу "Activision" найдены игры:
+-CODMW19
+
+
+Отказываем миграцию при необходимости
+
+migrate -database "postgresql://postgres:password@localhost:5432/postgres?sslmode=disable" -path migrations down
+
