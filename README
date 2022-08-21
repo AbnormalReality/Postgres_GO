@@ -1,0 +1,3 @@
+Как запустить интеграционный тест
+go test -run TestMain ./pkg/storage/ -v -count 1
+
